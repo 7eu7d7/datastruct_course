@@ -4,6 +4,8 @@ import coursedesign.gui.BasePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class tool {
     public static ImageIcon loadImage(String path){
@@ -28,5 +30,19 @@ public class tool {
             }
         }
         return flag;
+    }
+
+    public static boolean fuzzyQuery(String res,String aim){
+        String aim_fu="";
+        for(int i=0;i<aim.length();i++)aim_fu+=(aim.charAt(i)+"*");
+        return regexMatch(res,aim_fu);
+    }
+    public static boolean regexMatch(String res,String aim){
+        Pattern p=Pattern.compile(cutlast(aim));
+        Matcher m=p.matcher(res);
+        return m.find();
+    }
+    public static String cutlast(String str){
+        return str.substring(0,str.length()-1);
     }
 }

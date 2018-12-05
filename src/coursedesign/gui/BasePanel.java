@@ -15,7 +15,6 @@ import java.util.Vector;
 public class BasePanel extends JPanel {
     public static Vector<WorkView> all_works=new Vector<WorkView>();
     public static WorkView click_work,passby_wrok;
-    public static WorkView work_choose;
     public static Point now_pos;
 
     int startX,startY,endX,endY;
@@ -24,7 +23,7 @@ public class BasePanel extends JPanel {
     public BasePanel(){
         setLayout(null);
         Work work=new Work();
-        work.es=1;
+        work.early_start=1;
         work.name="fuck";
 
         WorkView wv=new WorkView(work);
@@ -92,7 +91,13 @@ public class BasePanel extends JPanel {
             public boolean postProcessKeyEvent(KeyEvent e)//实现postProcessKeyEvent方法
             {
                 if(e.getKeyCode()==KeyEvent.VK_DELETE){
-                        if(BasePanel.work_choose!=null)removeWork(BasePanel.work_choose);
+                        for (int i=0;i<all_works.size();i++){
+                            WorkView wv=all_works.get(i);
+                            if(wv.ischoosed()){
+                                removeWork(wv);
+                                i--;
+                            }
+                        }
                         return true;
                 }
                 return false;
@@ -134,6 +139,10 @@ public class BasePanel extends JPanel {
         drawArrows(g2d);//绘制图节点间的箭头
     }
 
+    public void clearChoose(){
+        for(WorkView wv:all_works)wv.choosed=false;
+    }
+
     public void drawArrows(Graphics2D g2d){
         Queue<WorkView> que=new LinkedList<WorkView>();//使用队列进行广度优先遍历
         Vector<WorkView> visit_list=new Vector<WorkView>();//储存已加入过的节点
@@ -166,15 +175,19 @@ public class BasePanel extends JPanel {
             if(visit_list.contains(nowwv))continue;
             Point thispos=nowwv.getRNodePos();
             visit_list.add(nowwv);
-            //使用迭代器进行遍历，提高效率
-            for(WorkView wv:nowwv.next_works){
+
+            for(int i=0;i<nowwv.next_works.size();i++){
+                WorkView wv=nowwv.next_works.get(i);
                 Point ptemp=wv.getLNodePos();
                 if(tool.isIntersect(thispos.x,thispos.y,ptemp.x-10,ptemp.y,startX,startY,endX,endY)){
                     nowwv.remove(wv);
+                    i--;
                 }
                 que.offer(wv);
             }
         }
     }
+
+
 
 }

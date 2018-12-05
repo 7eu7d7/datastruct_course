@@ -22,6 +22,9 @@ public class DPanel extends JPanel {
     public void setOffset(int x,int y){
         offset_x=x;offset_y=y;
     }
+    public boolean ischoosed(){
+        return choosed;
+    }
 
     @Override
     protected void paintComponent(Graphics g) {

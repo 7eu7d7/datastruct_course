@@ -4,8 +4,11 @@ import coursedesign.Main;
 import coursedesign.datastruct.Work;
 import coursedesign.widget.DNode;
 import coursedesign.widget.DPanel;
+import coursedesign.widget.NumField;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -20,7 +23,8 @@ public class WorkView extends DPanel {
     Vector<WorkView> next_works=new Vector<WorkView>();
     Vector<WorkView> before_works=new Vector<WorkView>();
 
-    JTextField la_es,la_ls,la_tf,la_name,la_ef,la_lf,la_ff;
+    NumField tx_early_start,tx_duration,tx_early_end,tx_late_start,tx_free,tx_late_end;
+    JTextField la_name;
     DNode node_left,node_right;
 
     public WorkView(){
@@ -29,6 +33,10 @@ public class WorkView extends DPanel {
     }
     public WorkView(Work work){
         this.work=work;
+        init();
+    }
+    public WorkView(WorkView wv){
+        this.work=new Work(wv.getWork());
         init();
     }
 
@@ -45,39 +53,88 @@ public class WorkView extends DPanel {
 
     public void initEdit(){
         //添加可编辑文本框
-        la_es=new JTextField(work.es+"");
-        la_es.setBounds(getX(0),getY(0),item_size,item_size);
-        la_es.setHorizontalAlignment(JTextField.CENTER);
-        add(la_es);
-        la_ls=new JTextField(work.ls+"");
-        la_ls.setBounds(getX(1),getY(0),item_size,item_size);
-        la_ls.setHorizontalAlignment(JTextField.CENTER);
-        add(la_ls);
-        la_tf=new JTextField(work.tf+"");
-        la_tf.setBounds(getX(2),getY(0),item_size,item_size);
-        la_tf.setHorizontalAlignment(JTextField.CENTER);
-        la_tf.setEditable(false);
+        tx_early_start=new NumField(work.early_start+"");
+        tx_early_start.setBounds(getX(0),getY(0),item_size,item_size);
+        tx_early_start.setHorizontalAlignment(JTextField.CENTER);
+        tx_early_start.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                refreshValue();
+            }
 
-        add(la_tf);
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                refreshValue();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                refreshValue();
+            }
+        });
+        add(tx_early_start);
+        tx_duration=new NumField(work.duration+"");
+        tx_duration.setBounds(getX(1),getY(0),item_size,item_size);
+        tx_duration.setHorizontalAlignment(JTextField.CENTER);
+        tx_duration.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                refreshValue();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                refreshValue();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                refreshValue();
+            }
+        });
+        add(tx_duration);
+        tx_early_end=new NumField(work.early_end+"");
+        tx_early_end.setBounds(getX(2),getY(0),item_size,item_size);
+        tx_early_end.setHorizontalAlignment(JTextField.CENTER);
+        tx_early_end.setEditable(false);
+
+        add(tx_early_end);
 
         la_name=new JTextField(work.name);
         la_name.setBounds(getX(0),getY(1),item_size+getX(2)-offset-offset_x,item_size);
         la_name.setHorizontalAlignment(JTextField.CENTER);
         add(la_name);
 
-        la_ef=new JTextField(work.ef+"");
-        la_ef.setBounds(getX(0),getY(2),item_size,item_size);
-        la_ef.setHorizontalAlignment(JTextField.CENTER);
-        add(la_ef);
-        la_lf=new JTextField(work.lf+"");
-        la_lf.setBounds(getX(1),getY(2),item_size,item_size);
-        la_lf.setHorizontalAlignment(JTextField.CENTER);
-        add(la_lf);
-        la_ff=new JTextField(work.ff+"");
-        la_ff.setBounds(getX(2),getY(2),item_size,item_size);
-        la_ff.setHorizontalAlignment(JTextField.CENTER);
-        la_ff.setEditable(false);
-        add(la_ff);
+        tx_late_start=new NumField(work.late_start+"");
+        tx_late_start.setBounds(getX(0),getY(2),item_size,item_size);
+        tx_late_start.setHorizontalAlignment(JTextField.CENTER);
+        tx_late_start.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                refreshValue();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                refreshValue();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                refreshValue();
+            }
+        });
+        add(tx_late_start);
+        tx_free=new NumField(work.free+"");
+        tx_free.setBounds(getX(1),getY(2),item_size,item_size);
+        tx_free.setHorizontalAlignment(JTextField.CENTER);
+        tx_free.setEditable(false);
+        add(tx_free);
+        tx_late_end=new NumField(work.late_end+"");
+        tx_late_end.setBounds(getX(2),getY(2),item_size,item_size);
+        tx_late_end.setHorizontalAlignment(JTextField.CENTER);
+        tx_late_end.setEditable(false);
+        add(tx_late_end);
     }
 
     public void initMouse(){
@@ -98,14 +155,15 @@ public class WorkView extends DPanel {
             public void mouseExited(MouseEvent e) {}
             public void mouseEntered(MouseEvent e) {}
             public void mouseClicked(MouseEvent e) {
-                if(BasePanel.work_choose==WorkView.this){
+                /*if(BasePanel.work_choose==WorkView.this){
                     choosed=false;
                     BasePanel.work_choose=null;
                 }else{
                     if(BasePanel.work_choose!=null)BasePanel.work_choose.choosed=false;
                     choosed=true;
                     BasePanel.work_choose=WorkView.this;
-                }
+                }*/
+                choosed=!choosed;
             }
         });
         addMouseMotionListener(new MouseMotionListener() {
@@ -218,6 +276,13 @@ public class WorkView extends DPanel {
         return new Point(getX()+node_left.getX()+node_left.getWidth()/2,getY()+node_left.getY()+node_left.getHeight()/2);
     }
 
+    public void refreshValue(){
+        try{
+            tx_early_end.setText(""+(tx_early_start.getValue()+tx_duration.getValue()));
+            tx_free.setText(""+(tx_early_start.getValue()-tx_late_start.getValue()));
+            tx_late_end.setText(""+(tx_late_start.getValue()+tx_duration.getValue()));
+        }catch (Exception e){}
+    }
     public void lineto(WorkView next){
         next_works.add(next);
         next.before_works.add(this);
@@ -225,6 +290,17 @@ public class WorkView extends DPanel {
     public void remove(WorkView next){
         next.before_works.remove(this);
         next_works.remove(next);
+    }
+    public Work getWork(){
+        work.name=la_name.getText();
+        work.early_start=Integer.parseInt(tx_early_start.getText());
+        work.duration=Integer.parseInt(tx_late_start.getText());
+        work.early_end=Integer.parseInt(tx_early_end.getText());
+        work.late_start=Integer.parseInt(tx_duration.getText());
+        work.free=Integer.parseInt(tx_free.getText());
+        work.late_end=Integer.parseInt(tx_late_end.getText());
+
+        return work;
     }
 
     public int getX(int col){
