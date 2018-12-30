@@ -4,6 +4,7 @@ import coursedesign.gui.BasePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +17,7 @@ public class tool {
         img.setImage(img.getImage().getScaledInstance(w,h, Image.SCALE_DEFAULT));
         return img;
     }
-    public static boolean isIntersect(double px1,double py1,double px2,double py2,double px3,double py3,double px4,double py4)//p1-p2 is or not intersect with p3-p4
+    public static boolean isIntersect(double px1,double py1,double px2,double py2,double px3,double py3,double px4,double py4)//判断线段是否相交
     {
         boolean flag = false;
         double d = (px2-px1)*(py4-py3) - (py2-py1)*(px4-px3);
@@ -32,17 +33,28 @@ public class tool {
         return flag;
     }
 
-    public static boolean fuzzyQuery(String res,String aim){
+    public static boolean fuzzyQuery(String res,String aim){//模糊查询
         String aim_fu="";
         for(int i=0;i<aim.length();i++)aim_fu+=(aim.charAt(i)+"*");
         return regexMatch(res,aim_fu);
     }
-    public static boolean regexMatch(String res,String aim){
+    public static boolean regexMatch(String res,String aim){//正则表达式匹配
         Pattern p=Pattern.compile(cutlast(aim));
         Matcher m=p.matcher(res);
         return m.find();
     }
     public static String cutlast(String str){
         return str.substring(0,str.length()-1);
+    }
+    public static String copmleteString(String res,String comp,int count){
+        for(int i=res.length();i<count;i++)res=comp+res;
+        return res;
+    }
+
+    public static File chooseFile(){
+        JFileChooser jfc=new JFileChooser();
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.showDialog(new JLabel(), "选择文件");
+        return jfc.getSelectedFile();
     }
 }

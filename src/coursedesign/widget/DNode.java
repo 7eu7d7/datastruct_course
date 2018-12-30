@@ -17,8 +17,8 @@ public class DNode extends JPanel {
 
     public DNode(){
         super();
-        setNormalImage(tool.loadImage("./ball.png"));
-        setOverImage(tool.loadImage("./ball_over.png"));
+        setNormalImage(tool.loadImage("ball.png"));
+        setOverImage(tool.loadImage("ball_over.png"));
 
         addMouseListener(new MouseListener() {
 

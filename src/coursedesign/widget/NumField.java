@@ -39,6 +39,23 @@ public class NumField extends JTextField
             super.insertString(offs, str , a);
         }
     }
+    public void setValue(int num){
+        setText(num+"");
+    }
+    public void setValue(String str){
+        if (str == null)
+        {
+            return;
+        }
+        char[] upper = str.toCharArray();
+        String temp="";
+        for (char ch:upper)
+        {
+            if (Character.isDigit(ch))
+                temp+=ch;
+        }
+        setText(temp);
+    }
     public int getValue(){
         return Integer.parseInt(getText());
     }
